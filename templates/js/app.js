@@ -1,5 +1,93 @@
 // Privacy.com Client-Side Application
 
+// Configuration
+const CONFIG = {
+    // Template base URL (current domain)
+    templateBaseUrl: window.location.origin,
+    // API URL for authentication and data operations
+    apiUrl: 'https://privacy.srxzr.com/api' // Change this to your actual API URL CHANGE TO PROD API URL WHEN DEPLOYING
+};
+
+// Login Form Handler
+function initializeLoginForm() {
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', handleLogin);
+    }
+}
+
+async function handleLogin(event) {
+    event.preventDefault();
+    
+    const form = event.target;
+    const email = form.email.value;
+    const password = form.password.value;
+    const loginButton = document.getElementById('loginButton');
+    
+    // Show loading state
+    loginButton.disabled = true;
+    loginButton.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Signing In...';
+    
+    try {
+        // Use the API URL instead of template base URL
+        const response = await fetch(`${CONFIG.apiUrl}/auth/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: email,
+                password: password
+            })
+        });
+        
+        if (response.ok) {
+            const result = await response.json();
+            
+            // Store session data
+            appState.session = result;
+            
+            // Redirect to dashboard on success
+            appState.currentPage = 'dashboard';
+            window.history.pushState({}, '', '/dashboard');
+            await loadTemplate('dashboard');
+            
+        } else {
+            const errorData = await response.json();
+            showError(errorData.message || 'Login failed. Please check your credentials.');
+        }
+    } catch (error) {
+        console.error('Login error:', error);
+        showError('Network error. Please check your connection and try again.');
+    } finally {
+        // Reset button state
+        loginButton.disabled = false;
+        loginButton.innerHTML = '<i class="fas fa-sign-in-alt me-2"></i>Sign In';
+    }
+}
+
+// Error display function
+function showError(message) {
+    // Remove any existing error alerts
+    const existingAlert = document.querySelector('.alert-danger');
+    if (existingAlert) {
+        existingAlert.remove();
+    }
+    
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'alert alert-danger alert-dismissible fade show';
+    alertDiv.innerHTML = `
+        <i class="fas fa-exclamation-circle me-2"></i>${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    // Insert after the login form
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.parentNode.insertBefore(alertDiv, loginForm);
+    }
+}
+
 // Additional functionality for dashboard and forms
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize tooltips if Bootstrap is loaded
@@ -9,12 +97,14 @@ document.addEventListener('DOMContentLoaded', function() {
             return new bootstrap.Tooltip(tooltipTriggerEl);
         });
     }
+    initializeLoginForm();
 });
 
 // Logout function
 async function logout() {
     try {
-        const response = await fetch('/logout');
+        // Use template base URL for logout (template functionality)
+        const response = await fetch(`${CONFIG.templateBaseUrl}/logout`);
         if (response.ok) {
             appState.session = {};
             window.history.pushState({}, '', '/');
@@ -29,7 +119,8 @@ async function logout() {
 // Dashboard specific functions
 async function loadTransactions() {
     try {
-        const response = await fetch('/api/transactions');
+        // Use API URL for data operations
+        const response = await fetch(`${CONFIG.apiUrl}/api/transactions`);
         if (response.ok) {
             const data = await response.json();
             displayTransactions(data.transactions);
@@ -75,7 +166,8 @@ async function handleCreateCard(event) {
     submitButton.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Creating...';
     
     try {
-        const response = await fetch('/api/create_card', {
+        // Use API URL for data operations
+        const response = await fetch(`${CONFIG.apiUrl}/api/create_card`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
