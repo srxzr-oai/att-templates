@@ -1,0 +1,95 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+        <a class="navbar-brand" href="#" onclick="navigate('index')">
+            <i class="fas fa-credit-card me-2"></i>Privacy.com
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="navigate('index')">Home</a>
+                </li>
+                {{ if session.user_email }}
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="navigate('dashboard')">Dashboard</a>
+                </li>
+                {{ endif }}
+            </ul>
+            <ul class="navbar-nav">
+                {{ if session.user_email }}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-bs-toggle="dropdown">
+                        <i class="fas fa-user me-1"></i>{{ session.user_email }}
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#" onclick="logout()">
+                            <i class="fas fa-sign-out-alt me-2"></i>Logout
+                        </a></li>
+                    </ul>
+                </li>
+                {{ else }}
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="navigate('login')">
+                        <i class="fas fa-sign-in-alt me-1"></i>Login
+                    </a>
+                </li>
+                {{ endif }}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<main class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <div class="error-page">
+                <i class="fas fa-exclamation-triangle fa-5x text-warning mb-4"></i>
+                <h1 class="display-4 fw-bold mb-3">404</h1>
+                <h2 class="h4 mb-4">Page Not Found</h2>
+                <p class="lead mb-4">
+                    Sorry, we couldn't find the page you're looking for. 
+                    It might have been removed, renamed, or doesn't exist.
+                </p>
+                <div class="d-grid gap-2 d-md-block">
+                    <a href="#" onclick="navigate('index')" class="btn btn-primary">
+                        <i class="fas fa-home me-2"></i>Go Home
+                    </a>
+                    {{ if session.user_email }}
+                    <a href="#" onclick="navigate('dashboard')" class="btn btn-outline-primary">
+                        <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                    </a>
+                    {{ endif }}
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="bg-dark text-light py-5 mt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <h5>Privacy.com</h5>
+                <p class="text-muted">Secure virtual cards for safe online shopping</p>
+            </div>
+            <div class="col-md-6">
+                <h6>Quick Links</h6>
+                <ul class="list-unstyled">
+                    <li><a href="#" onclick="navigate('index')" class="text-muted">Home</a></li>
+                    {{ if session.user_email }}
+                    <li><a href="#" onclick="navigate('dashboard')" class="text-muted">Dashboard</a></li>
+                    {{ else }}
+                    <li><a href="#" onclick="navigate('login')" class="text-muted">Login</a></li>
+                    {{ endif }}
+                </ul>
+            </div>
+        </div>
+        <hr>
+        <div class="text-center text-muted">
+            <small>&copy; 2024 Privacy.com. All rights reserved.</small>
+        </div>
+    </div>
+</footer> 
