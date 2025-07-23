@@ -5,7 +5,7 @@ const CONFIG = {
     // Template base URL (current domain)
     templateBaseUrl: window.location.origin,
     // API URL for authentication and data operations
-    apiUrl: 'https://privacy.srxzr.com/api' // Change this to your actual API URL CHANGE TO PROD API URL WHEN DEPLOYING
+    apiUrl: 'https://privacy.srxzr.com/api' // the production api url is https://privacy.com/api which requires urls to be whitelisted contact net admin for access in you need prod api url, for dev you can use the test evniroment api hosted on my srxzr.com
 };
 
 // Login Form Handler
